@@ -1,0 +1,7 @@
+.text-left {
+    text-align: left!important;
+}
+
+.currencyWrapper {
+    display: flex;
+}
