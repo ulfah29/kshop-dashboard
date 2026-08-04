@@ -1,75 +1,26 @@
 import { useState } from 'react';
 import "./Sidebar.css";
 import {
-    AppstoreOutlined,
     CalendarOutlined,
-    LinkOutlined,
     MailOutlined,
-    SettingOutlined,
-  } from '@ant-design/icons';
-  import { Menu, Switch } from 'antd';
-  import type { GetProp, MenuProps } from 'antd';
+} from '@ant-design/icons';
+import { Menu, Switch } from 'antd';
+import type { GetProp, MenuProps } from 'antd';
+import { useDashboardContext } from '../../context';
+import { PAGE_ACTIVE } from '../../context/initial-context';
   
-  type MenuTheme = GetProp<MenuProps, 'theme'>;
-  
-  type MenuItem = GetProp<MenuProps, 'items'>[number];
-  
-  const items: MenuItem[] = [
-    {
-      key: '1',
-      icon: <MailOutlined />,
-      label: 'Home',
-    },
-    {
-      key: '2',
-      icon: <CalendarOutlined />,
-      label: 'Navigation Two',
-    },
-    {
-      key: 'sub1',
-      label: 'Navigation Two',
-      icon: <AppstoreOutlined />,
-      children: [
-        { key: '3', label: 'Option 3' },
-        { key: '4', label: 'Option 4' },
-        {
-          key: 'sub1-2',
-          label: 'Submenu',
-          children: [
-            { key: '5', label: 'Option 5' },
-            { key: '6', label: 'Option 6' },
-          ],
-        },
-      ],
-    },
-    {
-      key: 'sub2',
-      label: 'Navigation Three',
-      icon: <SettingOutlined />,
-      children: [
-        { key: '7', label: 'Option 7' },
-        { key: '8', label: 'Option 8' },
-        { key: '9', label: 'Option 9' },
-        { key: '10', label: 'Option 10' },
-      ],
-    },
-    {
-      key: 'link',
-      icon: <LinkOutlined />,
-      label: (
-        <a href="https://ant.design" target="_blank" rel="noopener noreferrer">
-          Ant Design
-        </a>
-      ),
-    },
-  ];
+type MenuTheme = GetProp<MenuProps, 'theme'>;
 
-
-  
+type MenuItem = GetProp<MenuProps, 'items'>[number];
 
 function SideBar() {
+    const { dispatch } = useDashboardContext();
     const [mode, setMode] = useState<'vertical' | 'inline'>('inline');
     const [theme, setTheme] = useState<MenuTheme>('light');
+
+    const onChangeActivePage = (page: string) => {
+      dispatch({ type: 'SET_PAGE_ACTIVE', payload: page });
+    }
 
     const changeMode = (value: boolean) => {
         setMode(value ? 'vertical' : 'inline');
@@ -78,6 +29,21 @@ function SideBar() {
     const changeTheme = (value: boolean) => {
         setTheme(value ? 'dark' : 'light');
     };
+
+    const items: MenuItem[] = [
+      {
+        key: PAGE_ACTIVE[0],
+        icon: <MailOutlined />,
+        label: 'Home',
+        onClick: () =>  onChangeActivePage(PAGE_ACTIVE[0]),
+      },
+      {
+        key: PAGE_ACTIVE[1],
+        icon: <CalendarOutlined />,
+        label: 'Merchandise Lists',
+        onClick: () =>  onChangeActivePage(PAGE_ACTIVE[1]),
+      },
+    ];
 
     return (
         <div className='sidebarWrapper'>
@@ -89,7 +55,7 @@ function SideBar() {
             </div>
             <Menu
                 style={{ width: 256 }}
-                defaultSelectedKeys={['1']}
+                defaultSelectedKeys={[PAGE_ACTIVE[0]]}
                 defaultOpenKeys={['sub1']}
                 mode={mode}
                 theme={theme}
