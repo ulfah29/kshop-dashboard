@@ -1,22 +1,32 @@
-import type { DashboardContextType, FnDispatchPayload, StructFetchStatus } from './types';
+import type { DashboardContextType, FnDispatchPayload, StructFetchStatus, StructProductList } from './types';
 
 const casesGeneral = {
-  SET_FETCH_STATUS: (state: DashboardContextType, payload: StructFetchStatus) => ({
-    ...state,
-    fetchProductListStatus: {
-      ...state.fetchProductListStatus,
-      ...payload,
-    },
-  }),
   SET_PAGE_ACTIVE: (state: DashboardContextType, payload: string) => ({
     ...state,
     pageActive: payload,
-  })
+  }),
 };
 
-const cases = {
-  ...casesGeneral,
+const casesProductList = {
+    SET_FETCH_STATUS: (state: DashboardContextType, payload: StructFetchStatus) => ({
+        ...state,
+        fetchProductListStatus: {
+          ...state.fetchProductListStatus,
+          ...payload,
+        },
+    }),
+    SET_PRODUCT_LIST: (state: DashboardContextType, payload: StructProductList) => ({
+        ...state,
+        productList: {
+            ...state.productList,
+            ...payload,
+        }
+    }),
+}
 
+const cases = {
+    ...casesGeneral,
+    ...casesProductList,
 };
 
 const reducer = (state: DashboardContextType, action: FnDispatchPayload) => {

@@ -12,6 +12,7 @@ export const PAGE_ACTIVE = {
 const initialContext = {
     fetchProductListStatus: DEF_FETCH_STATUS,
     pageActive: PAGE_ACTIVE[0],
+    productList: [],
 };
 
 export default initialContext;
