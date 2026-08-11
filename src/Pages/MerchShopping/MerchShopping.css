@@ -1,4 +1,11 @@
-.tableWrapper {
+.pageWrapper {
   width: 100%;
   overflow: hidden;
+  padding: 16px;
+}
+
+.addNewProductSection {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 16px;
 }

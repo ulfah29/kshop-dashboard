@@ -9,7 +9,7 @@ function useProductList() {
     const [isLoading, setIsloading] = useState(false);
 
     useEffect(() => {
-        async function testConnection() {
+        async function getData() {
             setIsloading(true);
 
             const { data, error } = await supabase
@@ -27,7 +27,7 @@ function useProductList() {
             setIsloading(false);
         }
 
-        testConnection();
+        getData();
     }, []);
 
     return {

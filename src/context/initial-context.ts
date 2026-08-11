@@ -13,6 +13,8 @@ const initialContext = {
     fetchProductListStatus: DEF_FETCH_STATUS,
     pageActive: PAGE_ACTIVE[0],
     productList: [],
+    exchangeRate: 0,
+    selectedEditProduct: {},
 };
 
 export default initialContext;

@@ -36,6 +36,8 @@ export interface DashboardStateType {
     fetchProductListStatus: StructFetchStatus;
     pageActive: string;
     productList: StructProductList[];
+    exchangeRate: number;
+    selectedEditProduct: StructProductList;
 }
   
 export interface DashboardProviderProps {

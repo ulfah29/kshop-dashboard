@@ -5,28 +5,39 @@ const casesGeneral = {
     ...state,
     pageActive: payload,
   }),
+  SET_EXCHANGE_RATE: (state: DashboardContextType, payload: number) => ({
+    ...state,
+    exchangeRate: payload,
+  })
 };
 
 const casesProductList = {
     SET_FETCH_STATUS: (state: DashboardContextType, payload: StructFetchStatus) => ({
-        ...state,
-        fetchProductListStatus: {
-          ...state.fetchProductListStatus,
-          ...payload,
-        },
+      ...state,
+      fetchProductListStatus: {
+        ...state.fetchProductListStatus,
+        ...payload,
+      },
     }),
     SET_PRODUCT_LIST: (state: DashboardContextType, payload: StructProductList) => ({
-        ...state,
-        productList: {
-            ...state.productList,
-            ...payload,
-        }
+      ...state,
+      productList: {
+          ...state.productList,
+          ...payload,
+      }
     }),
+    SET_SELECTED_UPDATE_PRODUCT: (state: DashboardContextType, payload: StructProductList) => ({
+      ...state,
+      selectedEditProduct: {
+        ...state.selectedEditProduct,
+        ...payload,
+      }
+    })
 }
 
 const cases = {
-    ...casesGeneral,
-    ...casesProductList,
+  ...casesGeneral,
+  ...casesProductList,
 };
 
 const reducer = (state: DashboardContextType, action: FnDispatchPayload) => {
