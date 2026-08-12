@@ -4,7 +4,8 @@ import { useDashboardContext } from '../../../context';
 import { getLocalStorage } from '../../../lib/getLocalStorage';
 import useAddProductList from '../../../Hooks/useAddProductList';
 import useUpdateDataProduct from '../../../Hooks/useUpdateDataProduct';
-import useProductList from '../../../Hooks/useProductList';
+import type { StructProductList } from '../../../context/types';
+// import useProductList from '../../../Hooks/useProductList';
 
 interface StructProps {
   isModalOpen: boolean;
@@ -30,7 +31,7 @@ function AddProductModal(props: StructProps) {
     }
   }
 
-  const onFinish = (values: any) => {
+  const onFinish = (values: StructProductList) => {
     const currentExchangeRate = getCurrentExchangeRate();
     const shippingCostInputVal = values.web_shipping_cost || 0;
     const finalWebShippingCost = shippingCostInputVal * currentExchangeRate;
@@ -66,7 +67,11 @@ function AddProductModal(props: StructProps) {
       return;
     }
       
-    handleAddProduct(constructData, props?.handleCloseModal, props?.refetchProductList);
+    handleAddProduct({
+      product: constructData,
+      handleCloseModal: props?.handleCloseModal,
+      fetchProductList: props?.refetchProductList,
+    });
   };
 
   // const handleOnChangeInputNumber = (e) => {

@@ -6,6 +6,7 @@ const { Title } = Typography;
 
 export default function CurrencyCard() {
   const { rate, loading, error, refresh } = useExchangeRate();
+  const currencyRate = rate || 0; 
 
   if (loading) return <p>Loading...</p>;
   if (error) return <p>{error}</p>;
@@ -13,7 +14,7 @@ export default function CurrencyCard() {
   return (
     <Card loading={loading} className='mr-16'>
       <Title level={4} className='mt-0'>Today's Won rate</Title>
-      <Title level={2} className='mt-0'>{rate?.toFixed(2) || 0}</Title>
+      <Title level={2} className='mt-0'>{currencyRate.toFixed(2) || 0}</Title>
 
       <Button type="primary" onClick={refresh}>
         Refresh

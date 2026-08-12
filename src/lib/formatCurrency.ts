@@ -1,4 +1,4 @@
-export const formatCurrency = (amount, currency) => {
+export const formatCurrency = (amount: number, currency: string) => {
   //for idr no decimal, others decimal 1,00
   const fractionRules = currency === 'IDR' ? 0 : 2;
   const localeRules = currency === 'IDR' ? 'id-ID' : 'en-US'

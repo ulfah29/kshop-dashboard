@@ -1,10 +1,11 @@
 import { useState } from 'react';
 import { supabase } from "../lib/supabase";
 import { useDashboardContext } from '../context';
+import type { StructProductList } from '../context/types';
 
 function useProductList() {
     const { dispatch } = useDashboardContext();
-    const [productList, setProductList] = useState([]);
+    const [productList, setProductList] = useState<StructProductList[]>([]);
     const [isError, setIsError] = useState(false);
     const [isLoading, setIsloading] = useState(false);
 

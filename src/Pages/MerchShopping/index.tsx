@@ -8,6 +8,7 @@ import { formatCurrency } from '../../lib/formatCurrency';
 import AddProductModal from './AddProductModal';
 import ConfirmModal from '../../Components/ConfirmModal';
 import './MerchShopping.css';
+import type { StructProductList } from "../../context/types";
 
 const { Search } = Input;
 
@@ -18,6 +19,13 @@ interface DataType {
     exchange_rate: number;
     weight: number;
     web_shipping_cost: number;
+    local_shipping_cost: number;
+    ems_price: number;
+    packing_fee: number;
+    total_price_product: number;
+    admin_handling_fee: number;
+    total_price_net: number;
+    merch_group: string;
 }
 
 function MerchShopping() {
@@ -30,7 +38,7 @@ function MerchShopping() {
     const [isEditAction, setIsEditAction] = useState(false);
     const [api, contextHolder] = notification.useNotification();
     const refFirstFetchProductList = useRef(false);
-    const [filteredProductList, setFilteredProductList] = useState([]);
+    const [filteredProductList, setFilteredProductList] = useState<StructProductList[]>([]);
 
     useEffect(() => {
         if (!refFirstFetchProductList.current) {
@@ -41,7 +49,7 @@ function MerchShopping() {
 
     const data: DataType[] = Array.isArray(productList)
     ? productList.map((item, idx) => ({
-        id: item?.id || idx,
+        id: item?.id || String(idx),
         name: item?.name || '',
         price_won: item?.price_won || 0,
         exchange_rate: item?.exchange_rate_won || 0,
@@ -77,7 +85,7 @@ function MerchShopping() {
         });
     }
 
-    const handleSelectedEditProduct = (product) => {
+    const handleSelectedEditProduct = (product: StructProductList) => {
         dispatch({ type: 'SET_SELECTED_UPDATE_PRODUCT', payload: product });
         setIsOpenModalAddProd(true);
         setIsEditAction(true);
@@ -93,17 +101,20 @@ function MerchShopping() {
         dispatch({ type: 'SET_SELECTED_UPDATE_PRODUCT', payload: {} });
     }
 
-    const filteredProducts = (searchVal) => productList.filter((product) =>
-        product.name.toLowerCase().includes(searchVal));
+    const filteredProducts = (searchVal: string) => {
+        return productList.filter((product) => {
+            const productName = product.name || '';
 
-    const handleSearch = (value) => {
+            return productName.toLowerCase().includes(searchVal);
+        });
+    }
+
+    const handleSearch = (value: string) => {
         const searchVal = value.trim().toLowerCase();;
 
         if (searchVal) {
             const filtered = filteredProducts(searchVal);
             setFilteredProductList(filtered);
-            
-            console.log('filtered',filtered)
         }
 
         return;
@@ -128,7 +139,7 @@ function MerchShopping() {
             dataIndex: 'price_won',
             key: 'price_won',
             width: 100,
-            render: (price_won) => formatCurrency(price_won, 'KRW')
+            render: (price_won: number) => formatCurrency(price_won, 'KRW')
         },
         {
             title: 'Exchange Rate',
@@ -147,46 +158,46 @@ function MerchShopping() {
             key: 'web_shipping_cost',
             dataIndex: 'web_shipping_cost',
             width: 100,
-            render: (web_shipping_cost) => formatCurrency(web_shipping_cost, 'IDR'),
+            render: (web_shipping_cost: number) => formatCurrency(web_shipping_cost, 'IDR'),
         }, {
             title: 'Tax/EMS',
             key: 'ems_price',
             dataIndex: 'ems_price',
             width: 100,
-            render: (ems_price) => formatCurrency(ems_price, 'IDR'),
+            render: (ems_price: number) => formatCurrency(ems_price, 'IDR'),
         }, {
             title: 'Packing Fee',
             key: 'packing_fee',
             dataIndex: 'packing_fee',
             width: 100,
-            render: (packing_fee) => formatCurrency(packing_fee, 'IDR'),
+            render: (packing_fee: number) => formatCurrency(packing_fee, 'IDR'),
         }, {
             title: 'Total Product Price',
             key: 'total_price_product',
             dataIndex: 'total_price_product',
             width: 100,
-            render: (total_price_product) => formatCurrency(total_price_product, 'IDR'),
+            render: (total_price_product: number) => formatCurrency(total_price_product, 'IDR'),
         }, {
             title: 'Admin Handling Fee',
             key: 'admin_handling_fee',
             dataIndex: 'admin_handling_fee',
             width: 100,
-            render: (admin_handling_fee) => formatCurrency(admin_handling_fee, 'IDR'),
+            render: (admin_handling_fee: number) => formatCurrency(admin_handling_fee, 'IDR'),
         }, {
             title: 'Total Price Net',
             key: 'total_price_net',
             dataIndex: 'total_price_net',
             width: 100,
-            render: (total_price_net) => formatCurrency(total_price_net, 'IDR')
+            render: (total_price_net: number) => formatCurrency(total_price_net, 'IDR')
         },{
             title: 'Action',
             key: 'action',
             width: 100,
-            render: (_: any, record: DataType) => {
+            render: (_: any, record: StructProductList) => {
                 return (
                     <Space size="medium">
                         <a onClick={() => handleSelectedEditProduct(record)}>Edit</a>
-                        <a onClick={() => handleOpenConfirmDelete(record?.id || '')}>Delete</a>
+                        <a onClick={() => handleOpenConfirmDelete(String(record?.id || ''))}>Delete</a>
                     </Space>
                 )
             }

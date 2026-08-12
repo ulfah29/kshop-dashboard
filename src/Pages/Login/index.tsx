@@ -36,12 +36,12 @@ function Login(props: StructProps) {
     console.log('Failed:', errorInfo);
   };
 
-  const inputOnChangeUsename = (e) => {
+  const inputOnChangeUsename = (e: React.ChangeEvent<HTMLInputElement>) => {
     setShowErrorMsg(false);
     setUsernameVal(e.target.value);
   }
 
-  const inputOnChangePass= (e) => {
+  const inputOnChangePass= (e: React.ChangeEvent<HTMLInputElement>) => {
     setShowErrorMsg(false);
     setUserPass(e.target.value);
   }
