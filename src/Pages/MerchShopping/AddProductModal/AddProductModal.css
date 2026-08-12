@@ -1,0 +1,17 @@
+.formSection {
+  display: flex;
+
+  div {
+    width: 200px;
+    margin-right: 32px;
+  }
+}
+
+.modalButtonFooter {
+  text-align: right;
+  margin: 16px 0 0;
+
+  button {
+    margin-left: 8px;
+  }
+}

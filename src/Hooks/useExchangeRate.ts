@@ -1,6 +1,8 @@
 import { useEffect, useState, useCallback } from "react";
+import { useDashboardContext } from "../context";
 
 export function useExchangeRate(from = 'KRW', to = 'IDR') {
+  const { dispatch } = useDashboardContext();
   const cacheKey = `exchange-rate-${from}-${to}`;
 
   const [rate, setRate] = useState(null);
@@ -46,6 +48,7 @@ export function useExchangeRate(from = 'KRW', to = 'IDR') {
 
       setRate(latestRate);
       setError("");
+      dispatch({ type: 'SET_EXCHANGE_RATE', payload: latestRate?.toFixed(2) || 0 });
     } catch (err) {
       setError(err.message);
     } finally {

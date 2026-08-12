@@ -1,0 +1,11 @@
+.pageWrapper {
+  width: 100%;
+  overflow: hidden;
+  padding: 16px;
+}
+
+.topAction {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
