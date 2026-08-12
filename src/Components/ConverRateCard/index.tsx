@@ -1,5 +1,5 @@
-import { Button, Card, Typography, Input, Space } from 'antd';
 import { useState } from 'react';
+import { Button, Card, Typography, Input, Space } from 'antd';
 
 const { Title } = Typography;
 
@@ -8,11 +8,11 @@ interface StructProps {
 }
 
 function ConvertRateCard(props: StructProps) {
-    const [amountValue, setAmountValue] = useState();
+    const [amountValue, setAmountValue] = useState<number>(0);
     const currentRate = props.currentRate || 0;
 
-    const handleInputAmount = (e) => {
-        const inputValue = e.target.value || 0;
+    const handleInputAmount = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const inputValue = Number(e.target.value) || 0;
 
         setAmountValue(inputValue);
     }

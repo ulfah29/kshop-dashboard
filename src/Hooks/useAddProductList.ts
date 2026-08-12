@@ -1,11 +1,18 @@
 import { useState } from 'react';
 import { supabase } from "../lib/supabase";
+import type { StructProductList } from '../context/types';
+
+interface StructProps {
+  product: StructProductList;
+  handleCloseModal: () => void;
+  fetchProductList: () => void;
+}
 
 function useAddProductList() {
     const [isError, setIsError] = useState(false);
     const [isLoading, setIsloading] = useState(false);
 
-    const handleAddProduct = async(product, handleCloseModal, fetchProductList) => {
+    const handleAddProduct = async({ product, handleCloseModal, fetchProductList }: StructProps ) => {
       setIsloading(true);
 
       const { data, error } = await supabase

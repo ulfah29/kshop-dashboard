@@ -1,31 +1,42 @@
-import { createElement } from 'react';
+import { createElement, type ComponentType, type ReactNode } from 'react';
 
-export const setParent = (component, props = null, children = null) => {
-  return { component, props, children };
-};
+type AnyComponent = ComponentType<any>;
 
-/**
- * @param {Object} params - Parameters object.
- * @param {node} params.parentList - List of wrapper components.
- * @param {node} params.child - Children node.
- * @return {node} Composed node output.
- *
- * Will return something like this.
- * React.createElement(PageProvider1, null,
- * React.createElement(Provider2, null,
- * React.createElement(Provider3, null,
- * React.createElement(Child, null))));
- */
+interface ParentConfig {
+  component: AnyComponent;
+  props?: Record<string, unknown> | null;
+  children?: ReactNode;
+}
 
-function composeComponent(params) {
-  const { parentList, child } = params;
+export const setParent = (
+  component: AnyComponent,
+  props: Record<string, unknown> | null = null,
+  children: ReactNode = null
+): ParentConfig => ({
+  component,
+  props,
+  children,
+});
 
+interface ComposeParams {
+  parentList?: Array<ParentConfig | AnyComponent>;
+  child: AnyComponent;
+}
+
+function composeComponent({
+  parentList = [],
+  child,
+}: ComposeParams): ReactNode {
   let result = createElement(child);
 
-  for (let i = parentList.length; i > 0; i -= 1) {
-    const item = parentList[i - 1];
+  for (let i = parentList.length - 1; i >= 0; i -= 1) {
+    const item = parentList[i];
 
-    result = createElement(item?.component || item, item?.props || null, result);
+    if ('component' in item) {
+      result = createElement(item.component, item.props, result);
+    } else {
+      result = createElement(item, null, result);
+    }
   }
 
   return result;

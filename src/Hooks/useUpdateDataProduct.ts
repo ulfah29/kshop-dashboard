@@ -1,13 +1,14 @@
 import { useState } from 'react';
 import { useDashboardContext } from '../context';
 import { supabase } from "../lib/supabase";
+import type { StructProductList } from '../context/types';
 
 function useUpdateDataProduct() {
     const { selectedEditProduct } = useDashboardContext();
     const [isError, setIsError] = useState(false);
     const [isLoading, setIsloading] = useState(false);
 
-    const handleUpadateProduct = async(product, handleCloseModal, fetchProductList) => {
+    const handleUpadateProduct = async(product: StructProductList, handleCloseModal: () => void, fetchProductList: () => void) => {
       setIsloading(true);
 
       const { data, error } = await supabase
