@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { Table, Button, Space, notification } from 'antd';
+import { useEffect, useRef, useState } from "react";
+import { Table, Button, Space, notification, Input } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
 import { useDashboardContext } from "../../context";
 import useProductList from "../../Hooks/useProductList";
@@ -9,6 +9,7 @@ import AddProductModal from './AddProductModal';
 import ConfirmModal from '../../Components/ConfirmModal';
 import './MerchShopping.css';
 
+const { Search } = Input;
 
 interface DataType {
     id: string;
@@ -21,13 +22,22 @@ interface DataType {
 
 function MerchShopping() {
     const { dispatch } = useDashboardContext();
-    const { productList, isError, isLoading } = useProductList();
+    const { fetchProductList, productList, isError, isLoading } = useProductList();
     const { deleteProduct, isLoading: isLoadingDeleteProduct } = useDeleteProduct();
     const [isOpenModalAddProd, setIsOpenModalAddProd] = useState(false);
     const [isOpenConfirmDelete, setIsOpenConfirmDelete] = useState(false);
     const [selectedProductId, setSelectedProductId] = useState('');
     const [isEditAction, setIsEditAction] = useState(false);
     const [api, contextHolder] = notification.useNotification();
+    const refFirstFetchProductList = useRef(false);
+    const [filteredProductList, setFilteredProductList] = useState([]);
+
+    useEffect(() => {
+        if (!refFirstFetchProductList.current) {
+            fetchProductList();
+            refFirstFetchProductList.current = true;
+        }
+    },[refFirstFetchProductList])
 
     const data: DataType[] = Array.isArray(productList)
     ? productList.map((item, idx) => ({
@@ -43,6 +53,7 @@ function MerchShopping() {
         total_price_product: item?.total_price_product || 0,
         admin_handling_fee: item?.admin_handling_fee || 0,
         total_price_net: item?.total_price_net || 0,
+        merch_group: item?.merch_group || 'others',
     }))
     : [];
 
@@ -56,6 +67,7 @@ function MerchShopping() {
         api.open({
             description: 'Product deleted successfully.',
         });
+        fetchProductList();
     }
 
     const handleDeleteProduct = async() => {
@@ -81,6 +93,22 @@ function MerchShopping() {
         dispatch({ type: 'SET_SELECTED_UPDATE_PRODUCT', payload: {} });
     }
 
+    const filteredProducts = (searchVal) => productList.filter((product) =>
+        product.name.toLowerCase().includes(searchVal));
+
+    const handleSearch = (value) => {
+        const searchVal = value.trim().toLowerCase();;
+
+        if (searchVal) {
+            const filtered = filteredProducts(searchVal);
+            setFilteredProductList(filtered);
+            
+            console.log('filtered',filtered)
+        }
+
+        return;
+    }
+
     const columns = [
         {
             title: 'Product Name',
@@ -88,6 +116,12 @@ function MerchShopping() {
             key: 'name',
             fixed: true,
             width: 200,
+        },
+        {
+            title: 'Group',
+            dataIndex: 'merch_group',
+            key: 'merch_group',
+            width: 100,
         },
         {
             title: 'Price (won)',
@@ -149,7 +183,6 @@ function MerchShopping() {
             key: 'action',
             width: 100,
             render: (_: any, record: DataType) => {
-                console.log('record', record)
                 return (
                     <Space size="medium">
                         <a onClick={() => handleSelectedEditProduct(record)}>Edit</a>
@@ -163,7 +196,14 @@ function MerchShopping() {
 
     return (
         <div className="pageWrapper">
-            <div className="addNewProductSection">
+            <div className="topAction">
+                <Search
+                    placeholder="input product name"
+                    allowClear
+                    onSearch={handleSearch}
+                    style={{ width: 200 }}
+                    onClear={() => setFilteredProductList([])}
+                />
                 <Button type="primary" onClick={handleOpenAddProductModal}>
                     <PlusOutlined />Add New Product
                 </Button>
@@ -171,7 +211,7 @@ function MerchShopping() {
             <Table
                 rowKey="key"
                 columns={columns}
-                dataSource={data}
+                dataSource={filteredProductList.length !== 0 ? filteredProductList : data}
                 pagination={false}
                 loading={isLoading}
                 scroll={{ x: 2000, y: 500 }}
@@ -181,6 +221,7 @@ function MerchShopping() {
                 isModalOpen={isOpenModalAddProd} 
                 handleCloseModal={() => handleCloseAddProductModal()} 
                 isEdit={isEditAction}
+                refetchProductList={() =>fetchProductList()}
             />
 
             <ConfirmModal

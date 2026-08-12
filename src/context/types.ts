@@ -30,6 +30,7 @@ export interface StructProductList {
     admin_handling_fee: number,
     total_price_net: number,
     category: string,
+    merch_group: string,
 }
 
 export interface DashboardStateType {

@@ -21,10 +21,7 @@ const casesProductList = {
     }),
     SET_PRODUCT_LIST: (state: DashboardContextType, payload: StructProductList) => ({
       ...state,
-      productList: {
-          ...state.productList,
-          ...payload,
-      }
+      productList: payload,
     }),
     SET_SELECTED_UPDATE_PRODUCT: (state: DashboardContextType, payload: StructProductList) => ({
       ...state,

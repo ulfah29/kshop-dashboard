@@ -4,10 +4,12 @@ import { useDashboardContext } from '../../../context';
 import { getLocalStorage } from '../../../lib/getLocalStorage';
 import useAddProductList from '../../../Hooks/useAddProductList';
 import useUpdateDataProduct from '../../../Hooks/useUpdateDataProduct';
+import useProductList from '../../../Hooks/useProductList';
 
 interface StructProps {
   isModalOpen: boolean;
   handleCloseModal: () => void;
+  refetchProductList: () =>void;
   isEdit?: boolean; //dafault false
 }
 
@@ -15,6 +17,7 @@ function AddProductModal(props: StructProps) {
   const { exchangeRate, selectedEditProduct } = useDashboardContext();
   const { handleAddProduct, isLoading } = useAddProductList();
   const { handleUpadateProduct, isLoading: isLoadingUpdate } = useUpdateDataProduct();
+  // const { fetchProductList } = useProductList();
   const isEditModal = props.isEdit || false;
 
   const getCurrentExchangeRate = () => {
@@ -59,11 +62,11 @@ function AddProductModal(props: StructProps) {
     }
 
     if (isEditModal) {
-      handleUpadateProduct(constructData, props?.handleCloseModal);
+      handleUpadateProduct(constructData, props?.handleCloseModal, props?.refetchProductList);
       return;
     }
       
-    handleAddProduct(constructData, props?.handleCloseModal);
+    handleAddProduct(constructData, props?.handleCloseModal, props?.refetchProductList);
   };
 
   // const handleOnChangeInputNumber = (e) => {

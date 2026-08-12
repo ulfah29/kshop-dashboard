@@ -1,34 +1,37 @@
-import { useState } from 'react';
+// import { useState } from 'react';
 import "./Sidebar.css";
 import {
-    CalendarOutlined,
-    MailOutlined,
+  CalendarOutlined,
+  MailOutlined,
+  LogoutOutlined
 } from '@ant-design/icons';
-import { Menu, Switch } from 'antd';
+import { Menu } from 'antd';
 import type { GetProp, MenuProps } from 'antd';
 import { useDashboardContext } from '../../context';
 import { PAGE_ACTIVE } from '../../context/initial-context';
+import useLogoutUser from "../../Hooks/useLogoutUser";
   
-type MenuTheme = GetProp<MenuProps, 'theme'>;
+// type MenuTheme = GetProp<MenuProps, 'theme'>;
 
 type MenuItem = GetProp<MenuProps, 'items'>[number];
 
 function SideBar() {
     const { dispatch } = useDashboardContext();
-    const [mode, setMode] = useState<'vertical' | 'inline'>('inline');
-    const [theme, setTheme] = useState<MenuTheme>('light');
+    const { handleLogout } = useLogoutUser();
+    // const [mode, setMode] = useState<'vertical' | 'inline'>('inline');
+    // const [theme, setTheme] = useState<MenuTheme>('light');
 
     const onChangeActivePage = (page: string) => {
       dispatch({ type: 'SET_PAGE_ACTIVE', payload: page });
     }
 
-    const changeMode = (value: boolean) => {
-        setMode(value ? 'vertical' : 'inline');
-    };
+    // const changeMode = (value: boolean) => {
+    //     setMode(value ? 'vertical' : 'inline');
+    // };
 
-    const changeTheme = (value: boolean) => {
-        setTheme(value ? 'dark' : 'light');
-    };
+    // const changeTheme = (value: boolean) => {
+    //     setTheme(value ? 'dark' : 'light');
+    // };
 
     const items: MenuItem[] = [
       {
@@ -43,25 +46,31 @@ function SideBar() {
         label: 'Merchandise Lists',
         onClick: () =>  onChangeActivePage(PAGE_ACTIVE[1]),
       },
+      {
+        key: 'logout',
+        icon: <LogoutOutlined />,
+        label: 'Logout',
+        onClick: () =>  handleLogout(),
+      },
     ];
 
     return (
-        <div className='sidebarWrapper'>
-            <div className='switchWrapper'>
-                <Switch onChange={changeMode} /> Change Mode
-            </div>
-            <div className='switchWrapper'>
-                <Switch onChange={changeTheme} /> Change Style
-            </div>
-            <Menu
-                style={{ width: 256 }}
-                defaultSelectedKeys={[PAGE_ACTIVE[0]]}
-                defaultOpenKeys={['sub1']}
-                mode={mode}
-                theme={theme}
-                items={items}
-            />
+      <div className='sidebarWrapper'>
+        {/* <div className='switchWrapper'>
+          <Switch onChange={changeMode} /> Change Mode
         </div>
+        <div className='switchWrapper'>
+          <Switch onChange={changeTheme} /> Change Style
+        </div> */}
+        <Menu
+          style={{ width: 256 }}
+          defaultSelectedKeys={[PAGE_ACTIVE[0]]}
+          defaultOpenKeys={['sub1']}
+          // mode={mode}
+          // theme={theme}
+          items={items}
+        />
+      </div>
   );
 }
 
