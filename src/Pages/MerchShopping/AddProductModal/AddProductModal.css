@@ -1,8 +1,8 @@
 .formSection {
   display: flex;
 
-  div {
-    width: 200px;
+  .ant-form-item-control-input-content, .ant-form-item-control-input-content .ant-select {
+    width: 200px!important;
     margin-right: 32px;
   }
 }
