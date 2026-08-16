@@ -1,10 +1,11 @@
-import { Modal, Form, Button, Input } from 'antd';
+import { Modal, Form, Button, Input, Select } from 'antd';
 import './AddProductModal.css';
 import { useDashboardContext } from '../../../context';
 import { getLocalStorage } from '../../../lib/getLocalStorage';
 import useAddProductList from '../../../Hooks/useAddProductList';
 import useUpdateDataProduct from '../../../Hooks/useUpdateDataProduct';
 import type { StructProductList } from '../../../context/types';
+import { useState } from 'react';
 // import useProductList from '../../../Hooks/useProductList';
 
 interface StructProps {
@@ -18,6 +19,7 @@ function AddProductModal(props: StructProps) {
   const { exchangeRate, selectedEditProduct } = useDashboardContext();
   const { handleAddProduct, isLoading } = useAddProductList();
   const { handleUpadateProduct, isLoading: isLoadingUpdate } = useUpdateDataProduct();
+  const [selectedMerchGroup, setSelectedMerchProduct] = useState('');
   // const { fetchProductList } = useProductList();
   const isEditModal = props.isEdit || false;
 
@@ -33,18 +35,18 @@ function AddProductModal(props: StructProps) {
 
   const onFinish = (values: StructProductList) => {
     const currentExchangeRate = getCurrentExchangeRate();
-    const shippingCostInputVal = values.web_shipping_cost || 0;
+    const shippingCostInputVal = Number(values.web_shipping_cost || 0);
     const finalWebShippingCost = shippingCostInputVal * currentExchangeRate;
-    const priceWonInputVal = values.price_won || 0;
+    const priceWonInputVal = Number(values.price_won || 0);
     const priceIdr = priceWonInputVal * currentExchangeRate;
-    const localShippingCostInputVal = values.local_shipping_cost || 0;
-    const weightInputVal = values.weight || 0;
-    const emsPriceInputVal =  values.ems_price || 0;
+    const localShippingCostInputVal = Number(values.local_shipping_cost || 0);
+    const weightInputVal = Number(values.weight || 0);
+    const emsPriceInputVal =  Number(values.ems_price || 0);
     const finalEmsPrice = emsPriceInputVal * weightInputVal;
-    const packingFeeInputVal = values.packing_fee || 0;
-    const adminFeeInputVal = values.admin_handling_fee || 0;
+    const packingFeeInputVal = Number(values.packing_fee || 0);
+    const adminFeeInputVal = Number(values.admin_handling_fee || 0);
     const totalProductPrice = priceIdr + finalWebShippingCost + localShippingCostInputVal + emsPriceInputVal + packingFeeInputVal;
-    const totalPrice = Number(totalProductPrice) + Number(adminFeeInputVal);
+    const totalPrice = totalProductPrice + adminFeeInputVal;
 
     const constructData = {
       name: values.name || '',
@@ -60,6 +62,7 @@ function AddProductModal(props: StructProps) {
       admin_handling_fee: adminFeeInputVal,
       total_price_net: totalPrice,
       category: values.category || '',
+      merch_group: selectedMerchGroup|| '',
     }
 
     if (isEditModal) {
@@ -72,6 +75,10 @@ function AddProductModal(props: StructProps) {
       handleCloseModal: props?.handleCloseModal,
       fetchProductList: props?.refetchProductList,
     });
+  };
+
+  const handleSelectMerchGroup = (value: string) => {
+    setSelectedMerchProduct(value);
   };
 
   // const handleOnChangeInputNumber = (e) => {
@@ -122,11 +129,11 @@ function AddProductModal(props: StructProps) {
           <Form.Item label="Weight (/100gr)" name='weight'>
             <Input placeholder="Input Product Weight" />
           </Form.Item>
-        </div>
-        <div>
           <Form.Item label="Tax/EMS Rate" name='ems_price'>
             <Input placeholder="Input Tax/EMS Rate" />
           </Form.Item>
+        </div>
+        <div>
           <Form.Item label="Local Shipping Cost (IDR)" name='local_shipping_cost'>
             <Input placeholder="Input Local Shipping Cost" />
           </Form.Item>
@@ -135,6 +142,20 @@ function AddProductModal(props: StructProps) {
           </Form.Item>
           <Form.Item label="Admin Fee" name='admin_handling_fee'>
             <Input placeholder="Input Admin Fee" />
+          </Form.Item>
+          <Form.Item label="Group" name='merch_group'>
+            <Select
+              placeholder="Select a person"
+              style={{ width: 120 }}
+              onChange={handleSelectMerchGroup}
+              options={[
+                { value: 'bts', label: 'BTS' },
+                { value: 'seventeen', label: 'SEVENTEEN' },
+                { value: 'day6', label: 'DAY6' },
+                { value: 'enhyphen', label: 'Enhyphen' },
+                { value: 'others', label: 'Others' },
+              ]}
+            />
           </Form.Item>
         </div>
       </div>

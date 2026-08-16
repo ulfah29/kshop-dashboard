@@ -27,6 +27,7 @@ function useUpdateDataProduct() {
           admin_handling_fee: Number(product.admin_handling_fee || 0),
           total_price_net: Math.round(Number(product.total_price_net || 0)),
           category: product.category || '',
+          merch_group: product.merch_group || '',
         })
         .eq('id', selectedEditProduct?.id || 0)
         .select()

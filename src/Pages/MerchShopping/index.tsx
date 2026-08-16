@@ -133,6 +133,7 @@ function MerchShopping() {
             dataIndex: 'merch_group',
             key: 'merch_group',
             width: 100,
+            render: (merch_group: string) => merch_group.toUpperCase(),
         },
         {
             title: 'Price (won)',
