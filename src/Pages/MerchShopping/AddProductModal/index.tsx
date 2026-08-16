@@ -1,7 +1,7 @@
 import { Modal, Form, Button, Input, Select } from 'antd';
 import './AddProductModal.css';
 import { useDashboardContext } from '../../../context';
-import { getLocalStorage } from '../../../lib/getLocalStorage';
+import getCurrentExchangeRate from '../../../lib/getCurrentExchangeRate';
 import useAddProductList from '../../../Hooks/useAddProductList';
 import useUpdateDataProduct from '../../../Hooks/useUpdateDataProduct';
 import type { StructProductList } from '../../../context/types';
@@ -22,19 +22,9 @@ function AddProductModal(props: StructProps) {
   const [selectedMerchGroup, setSelectedMerchProduct] = useState('');
   // const { fetchProductList } = useProductList();
   const isEditModal = props.isEdit || false;
-
-  const getCurrentExchangeRate = () => {
-    if (exchangeRate !== 0) {
-      return exchangeRate;
-    } else {
-      const localDataExchangeRate = getLocalStorage('exchange-rate-KRW-IDR')?.rate || 0;
-
-      return localDataExchangeRate?.toFixed(2) || exchangeRate;
-    }
-  }
+  const currentExchangeRate = getCurrentExchangeRate(exchangeRate, 'exchange-rate-KRW-IDR');
 
   const onFinish = (values: StructProductList) => {
-    const currentExchangeRate = getCurrentExchangeRate();
     const shippingCostInputVal = Number(values.web_shipping_cost || 0);
     const finalWebShippingCost = shippingCostInputVal * currentExchangeRate;
     const priceWonInputVal = Number(values.price_won || 0);
@@ -121,27 +111,27 @@ function AddProductModal(props: StructProps) {
             <Input placeholder="Input Product Name" />
           </Form.Item>
           <Form.Item label="Price (won)" name='price_won'>
-            <Input placeholder="Input Price in Won"/>
+            <Input type='number' placeholder="Input Price in Won"/>
           </Form.Item>
           <Form.Item label="Web Shipping Cost (won)" name='web_shipping_cost'>
-            <Input placeholder="Input Web Shipping Cost in Won" />
+            <Input type='number' placeholder="Input Web Shipping Cost in Won" />
           </Form.Item>
           <Form.Item label="Weight (/100gr)" name='weight'>
-            <Input placeholder="Input Product Weight" />
+            <Input type='number' placeholder="Input Product Weight" />
           </Form.Item>
           <Form.Item label="Tax/EMS Rate" name='ems_price'>
-            <Input placeholder="Input Tax/EMS Rate" />
+            <Input type='number' placeholder="Input Tax/EMS Rate" />
           </Form.Item>
         </div>
         <div>
           <Form.Item label="Local Shipping Cost (IDR)" name='local_shipping_cost'>
-            <Input placeholder="Input Local Shipping Cost" />
+            <Input type='number' placeholder="Input Local Shipping Cost" />
           </Form.Item>
           <Form.Item label="Packing Fee" name='packing_fee'>
-            <Input placeholder="Input Packing Fee" />
+            <Input type='number' placeholder="Input Packing Fee" />
           </Form.Item>
           <Form.Item label="Admin Fee" name='admin_handling_fee'>
-            <Input placeholder="Input Admin Fee" />
+            <Input type='number' placeholder="Input Admin Fee" />
           </Form.Item>
           <Form.Item label="Group" name='merch_group'>
             <Select

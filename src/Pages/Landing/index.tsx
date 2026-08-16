@@ -11,7 +11,7 @@ function Landing() {
             <Title className='text-left'>Hi, Ulf..</Title>
             <div className='currencyWrapper'>
                 <CurrencyCard />
-                <ConvertRateCard currentRate={12} />
+                <ConvertRateCard />
             </div>
         </div>
     )
